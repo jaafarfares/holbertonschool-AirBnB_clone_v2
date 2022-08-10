@@ -1,5 +1,8 @@
 #!/usr/bin/python3
-""" Console Module  """
+"""
+Console Module
+"""
+
 import cmd
 import json
 import shlex
