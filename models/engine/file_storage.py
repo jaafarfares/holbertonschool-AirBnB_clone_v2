@@ -1,15 +1,23 @@
 #!/usr/bin/python3
-"""Update FileStorage with delete and all functions"""
+"""
+    Update FileStorage with delete and all functions
+"""
 import json
 import models
 
 
 class FileStorage:
+    """
+    the class file storage
+    """
 
     __file_path = "file.json"
     __objects = {}
 
     def all(self, cls=None):
+        """
+        returns the list of objects of one type of class. Example below
+        with State """
 
         if cls is None:
             return self.__objects
@@ -22,22 +30,27 @@ class FileStorage:
             return classes
 
     def delete(self, obj=None):
-
-        if obj:
-            try:
-                del FileStorage.__objects[str(obj.__class__.__name__) +
-                                          "." +
-                                          str(obj.id)]
-            except KeyError:
-                pass
+        """
+        Delete a given object from __objects, if it exists.
+        """
+        try:
+            del self.__objects["{}.{}".format(type(obj).__name__, obj.id)]
+        except (AttributeError, KeyError):
+            pass
 
     def new(self, obj):
+        """
+        ...
+        """
 
         key = str(obj.__class__.__name__) + "." + str(obj.id)
         value_dict = obj
         FileStorage.__objects[key] = value_dict
 
     def save(self):
+        """
+        ...............
+        """
 
         objects_dict = {}
         for key, val in FileStorage.__objects.items():
@@ -47,6 +60,9 @@ class FileStorage:
             json.dump(objects_dict, fd)
 
     def reload(self):
+        """
+        ...............
+        """
 
         try:
             with open(FileStorage.__file_path, encoding="UTF8") as fd:
@@ -59,5 +75,7 @@ class FileStorage:
             pass
 
     def close(self):
-
+        """
+        ...............
+        """
         self.reload()
