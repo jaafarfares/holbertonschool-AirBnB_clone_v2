@@ -1,62 +1,85 @@
 #!/usr/bin/python3
-"""This module defines a base class for all models in our hbnb clone"""
-from timeit import default_timer
+"""
+the BaseModel class
+"""
+import models
 import uuid
 from datetime import datetime
-from venv import create
-from xmlrpc.client import DateTime
+from sqlalchemy import Column, String, DateTime
 from sqlalchemy.ext.declarative import declarative_base
-from sqlalchemy import Column, Integer, String
 
 Base = declarative_base()
 
 
 class BaseModel:
-    """A base class for all hbnb models"""
+    """
+        Base class for the other classes
+    """
     id = Column(String(60), primary_key=True, nullable=False)
-    create_at = Column(DateTime, nullable=False, default=datetime.utcnow())
-    update_at = Column(DateTime, nullable=False, default=datetime.utcnow())
+    created_at = Column(DateTime,
+                        default=datetime.utcnow(),
+                        nullable=False)
+    updated_at = Column(DateTime,
+                        default=datetime.utcnow(),
+                        nullable=False)
 
     def __init__(self, *args, **kwargs):
-        """Instatntiates a new model"""
-        if not kwargs:
-            from models import storage
-            self.id = str(uuid.uuid4())
-            self.created_at = datetime.now()
-            self.updated_at = datetime.now()
-        else:
-            kwargs['updated_at'] = datetime.strptime(kwargs['updated_at'],
-                                                     '%Y-%m-%dT%H:%M:%S.%f')
-            kwargs['created_at'] = datetime.strptime(kwargs['created_at'],
-                                                     '%Y-%m-%dT%H:%M:%S.%f')
-            del kwargs['__class__']
-            self.__dict__.update(kwargs)
+        """
+        initialize public instance attribute
+        """
+        self.id = str(uuid.uuid4())
+        self.created_at = datetime.now()
+        self.updated_at = datetime.now()
+
+        if "created_at" in kwargs:
+            kwargs["created_at"] = datetime.strptime(
+                    kwargs["created_at"], "%Y-%m-%dT%H:%M:%S.%f")
+        if "updated_at" in kwargs:
+            kwargs["updated_at"] = datetime.strptime(
+                    kwargs["updated_at"], "%Y-%m-%dT%H:%M:%S.%f")
+        for key, val in kwargs.items():
+            if "__class__" not in key:
+                setattr(self, key, val)
 
     def __str__(self):
-        """Returns a string representation of the instance"""
-        cls = (str(type(self)).split('.')[-1]).split('\'')[0]
-        return '[{}] ({}) {}'.format(cls, self.id, self.__dict__)
+        """
+        return a string representation
+        """
+        return ("[{}] ({}) {}".format(self.__class__.__name__,
+                                      self.id, self.__dict__))
+
+    def __repr__(self):
+        """
+        return string representation
+        """
+        return ("[{}] ({}) {}".format(self.__class__.__name__,
+                                      self.id, self.__dict__))
 
     def save(self):
-        """Updates updated_at with current time when instance is changed"""
-        from models import storage
+        """
+        save method
+        """
         self.updated_at = datetime.now()
-        storage.new(self)
-        storage.save()
+        models.storage.new(self)
+        models.storage.save()
 
     def to_dict(self):
-        """Convert instance into dict format"""
-        dictionary = {}
-        dictionary.update(self.__dict__)
-        dictionary.update({'__class__':
-                          (str(type(self)).split('.')[-1]).split('\'')[0]})
-        dictionary['created_at'] = self.created_at.isoformat()
-        dictionary['updated_at'] = self.updated_at.isoformat()
-        if '_sa_instance_state' in dictionary:
-            del dictionary['sa_instance_state']
-        return dictionary
+        """
+        dictionary representation
+        """
+        cp_dct = dict(self.__dict__)
+        cp_dct['__class__'] = self.__class__.__name__
+        cp_dct['updated_at'] = self.updated_at.strftime(
+            "%Y-%m-%dT%H:%M:%S.%f")
+        cp_dct['created_at'] = self.created_at.strftime(
+            "%Y-%m-%dT%H:%M:%S.%f")
+        if "_sa_instance_state" in cp_dct:
+            del cp_dct["_sa_instance_state"]
+
+        return (cp_dct)
 
     def delete(self):
-        """delete"""
-        from models import storage
-        storage.delete(self)
+        """
+        calling the method delete
+        """
+        models.storage.delete(self)
