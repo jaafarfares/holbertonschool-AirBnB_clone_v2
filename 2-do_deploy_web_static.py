@@ -9,6 +9,7 @@ env.hosts = ['34.224.57.138', '54.209.132.114']
 
 
 def do_deploy(archive_path):
+    """ this is a usles comment """
     if exists(archive_path):
         s = archive_path.split("/")[-1]
         se = s.split(".")[0]
