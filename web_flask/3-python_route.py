@@ -10,9 +10,9 @@ app = Flask(__name__)
 @app.route('/', strict_slashes=False)
 def home():
     """
-    the messsage needed to display
+    display the message nededd
     """
-    return "Hello HBNB!"
+    return 'Hello HBNB!'
 
 
 @app.route('/<hbnb>', strict_slashes=False)
