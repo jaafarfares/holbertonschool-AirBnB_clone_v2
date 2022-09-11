@@ -1,7 +1,8 @@
 #!/usr/bin/python3
 """
-start a web application using flask
+starts a web application using flask
 """
+
 from flask import Flask
 app = Flask(__name__)
 
@@ -15,7 +16,7 @@ def home():
 
 
 @app.route('/<hbnb>', strict_slashes=False)
-def hbnb(hbnb):
+def hbnb1(hbnb):
     """
     the messsage needed to display
     """
@@ -23,7 +24,7 @@ def hbnb(hbnb):
 
 
 @app.route('/c/<text>', strict_slashes=False)
-def texts(text):
+def HBNB2(text):
     """
     the messsage needed to display
     """
@@ -32,7 +33,7 @@ def texts(text):
 
 @app.route('/python', strict_slashes=False)
 @app.route('/python/<text>', strict_slashes=False)
-def default(text="is cool"):
+def hbnb3(text="is cool"):
     """
     the messsage needed to display
     """
