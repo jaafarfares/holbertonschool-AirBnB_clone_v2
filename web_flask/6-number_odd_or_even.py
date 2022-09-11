@@ -15,7 +15,7 @@ def home():
 
 
 @app.route('/hbnb', strict_slashes=False)
-def hbnb(hbnb):
+def hbnb1(hbnb):
     """
     the messsage needed to display
     """
@@ -61,8 +61,9 @@ def even_or_odd(n):
     the message + number + result needed to display
     """
     if n % 2 == 0:
-        reslt = 'even'
-    reslt = 'odd'
+        result = 'even'
+    else:
+        result = 'odd'
     return render_template("6-number_odd_or_even.html", n=n, result=result)
 
 
