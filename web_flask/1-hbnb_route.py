@@ -12,8 +12,6 @@ def home():
     the messsage needed to display
     """
     return 'Hello HBNB!'
-
-
 @app.route('/<hbnb>', strict_slashes=False)
 def hbnb(hbnb):
     """
